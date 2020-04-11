@@ -4,9 +4,28 @@
 |:---------------------------------:|:--------------------------------:|
 | ![serveur](img/serveur_final.png) | ![serveur](img/client_final.png) |
 
+```mermaid
+sequenceDiagram
+  participant s as Serveur
+  participant c as Client
+  alt joueur serveur=1
+    s ->> c : "2"
+    loop partie
+      s -->> c : "A1"
+      c -->> s : "C2"
+    end
+  else joueur serveur=2
+    s ->> c : "1"
+    loop partie
+      c -->> s : "B2"
+      s -->> c : "A1"
+    end
+  end
+```
+
 # I. Préparation
 
-Partons de la dernière version du programme de TicTacToe (mono-poste):
+Partons de la dernière version du programme de Tic Tac Toe mono-poste:
 
 - `gui.py`
 
@@ -74,7 +93,7 @@ class Jeu():
 
 ## 2) Titre de la fenêtre
 
-Le titre de la fenêtre avec Pygame peut se modifier à tout moment avec l'instruction: `pygame.display.set_caption("Mon titre")` .
+Le titre de la fenêtre avec *Pygame* peut se modifier à tout moment avec l'instruction: `pygame.display.set_caption("Mon titre")` .
 
 Pour éviter de surcharger la boucle principale du jeu, nous allons créer une nouvelle fonction dans `gui.py` pour s'occupe d'indiquer dans le titre :
 
@@ -147,7 +166,18 @@ def __init__(self):
     print("Connecté avec", remote_socket)
 ```
 
-Une fois connectés, le serveur va tirer au sort (utilisation du module `random`) le premier joueur à jouer (1 ou 2) et envoyer l'autre numéro au client (création du nouvel attribut `self.joueur`) :
+Une fois connectés, le serveur va tirer au sort (utilisation du module `random`) son numéro de joueur (1 ou 2) et envoyer l'autre numéro au client (création du nouvel attribut `self.joueur`) :
+
+```mermaid
+sequenceDiagram
+  participant s as Serveur
+  participant c as Client
+  alt joueur Serveur=1
+    s ->> c : "1"
+  else joueur Serveur=2
+    s ->> c : "2"
+  end
+```
 
 ```python
 import random
@@ -200,6 +230,17 @@ print('Joueur', self.joueur)
 # II. Communication réseau durant le jeu
 
 La communication est de type *ping-pong*:
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant j1 as Joueur 1
+  participant j2 as Joueur 2
+  loop partie 
+    j1 -->> j2 : "C3"
+    j2 -->> j1 : "A1"
+  end
+```
 
 - lorsque joueur local effectue un coup, il l'envoie (*écriture* sur la *socket locale*) pendant que l'autre écoute (*lecture* de la *socket locale*).
 
@@ -335,4 +376,20 @@ def maj(self, c, l):
     self.reception.stop() # arrêter la réception
   else: # Passer au joueur suivant
     self.mon_tour = not self.mon_tour
+```
+
+```mermaid
+classDiagram
+  class Jeu {
+    +self.plateau
+    +self.joueur
+    +self.serveur
+    +self.local_socket
+    +self.reception
+    +self.mon_tour
+    +self.fin
+    +__init__(self)
+    +maj(self,c,l)
+    -victoire(self)
+  }
 ```
