@@ -12,6 +12,18 @@ HEIGHT = 150
 BLANC = (255,255,255)
 NOIR = (0,0,0)
 
+# Fonction utile
+def titre(j):
+  if j.serveur:
+    joueur = "Serveur"
+  else:
+    joueur = "Client"
+
+  if j.mon_tour:
+    pygame.display.set_caption(joueur + " - À vous")
+  else:
+    pygame.display.set_caption(joueur + " - Attendre")
+
 # Démarrer la bibliothèque
 pygame.init()
 
@@ -58,12 +70,14 @@ while continuer:
       position = e.pos
       colonne = int(position[0]//(WIDTH/3))
       ligne = int(position[1]//(HEIGHT/3))
-      jeu.maj(colonne, ligne)
+
+      if jeu.mon_tour:
+        jeu.maj(colonne, ligne)
 
   ##############################
   # Mises à jour des propriétés
   # du contenu
-  
+  titre(jeu)
   
   #########################
   # Dessin du contenu
