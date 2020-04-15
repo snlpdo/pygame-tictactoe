@@ -8,6 +8,8 @@ Partons d'une version modifiée du jeu de Tic Tac Toe monoposte  où 2 pièces s
     <circle stroke="black" stroke-width="3" cx="75" cy="25" r="15" fill="None"/>
 </svg>
 
+Regardons comment déplacer ces 2 pièces sur le plateau à l'aide de la souris. La seule contrainte ici est qu'il n'est pas possible de déposer une pièce sur une case déjà occupée.
+
 ## I. Fonctionnement interne
 
 (*classe `Jeu` dans le module `engine.py`*)
@@ -24,7 +26,7 @@ En POO (*Programmation Orientée Objet*), le jeu doit modifier lui-même ses val
           return self.plateau[ligne][colonne]
   ```
 
-- `deplacer` pour changer l'emplacement d'une pièce (suite à un déplacement graphique). Ses paramètres sont les emplacements de départ (colonne, ligne) et d'arrivée (colonne, ligne)
+- `deplacer` pour changer l'emplacement d'une pièce (suite à une demande déplacement par l'utilisateur). Ses paramètres sont les emplacements de départ (colonne, ligne) et d'arrivée (colonne, ligne)
 
   ```python
   def deplacer(self, dep, arr):
