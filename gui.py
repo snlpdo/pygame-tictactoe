@@ -66,6 +66,7 @@ while continuer:
         position = e.pos
         colonne = int(position[0]//(WIDTH/3))
         ligne = int(position[1]//(HEIGHT/3))
+        delta = ( position[0]%int(WIDTH/3), position[1]%int(HEIGHT/3) )
         
         # Vérifier s'il y a une pièce
         piece_deplacee = jeu.occupant(colonne, ligne)
@@ -108,9 +109,9 @@ while continuer:
 
   # Dessin de la pièce qui bouge
   if piece_deplacee == 1: # une croix
-      screen.blit(croix, position)
+      screen.blit(croix, (position[0]-delta[0], position[1]-delta[1]) )
   elif piece_deplacee == 2: # un cercle
-      screen.blit(cercle, position)
+      screen.blit(cercle, (position[0]-delta[0], position[1]-delta[1]) )
   
   #########################  
   # raffraichir l'affichage

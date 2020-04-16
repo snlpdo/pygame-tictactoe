@@ -14,10 +14,10 @@ Regardons comment déplacer ces 2 pièces sur le plateau à l'aide de la souris.
 
 (*classe `Jeu` dans le module `engine.py`*)
 
-En POO (*Programmation Orientée Objet*), le jeu doit modifier lui-même ses valeurs et non pas le module graphique. La classe `Jeu` doit donc fournir 2 nouveaux services (= 2 nouvelles méthodes):
+En POO (*Programmation Orientée Objet*), c'est le jeu qui doit modifier lui-même ses attributs et non pas le module graphique. La classe `Jeu` doit donc fournir 2 nouvelles méthodes :
 
 - `occupation` pour vérifier si une case donnée est libre et, si non, indiquer la pièce qui l'occupe
-
+  
   ```python
   def occupant(self, colonne, ligne):
       if self.plateau[ligne][colonne]==0: # case vide
@@ -27,7 +27,7 @@ En POO (*Programmation Orientée Objet*), le jeu doit modifier lui-même ses val
   ```
 
 - `deplacer` pour changer l'emplacement d'une pièce (suite à une demande déplacement par l'utilisateur). Ses paramètres sont les emplacements de départ (colonne, ligne) et d'arrivée (colonne, ligne)
-
+  
   ```python
   def deplacer(self, dep, arr):
       if self.plateau[arr[1]][arr[0]]==0: # case arrivée libre
@@ -55,16 +55,15 @@ Le déplacement via la souris fait intervenir 3 événements (instructions à pl
 
 > Rappel: les indices de colonne et de lignes s'obtiennent en divisant les coordonnées de la souris par la taille d'une case (et on ne garde que la partie entière).
 
-
 1. `pygame.MOUSEBUTTONDOWN`: sélection de la pièce.
-
+   
    ```python
    elif e.type == pygame.MOUSEBUTTONDOWN: # Début
        # colonne et ligne de départ
        position = e.pos
        colonne = int(position[0]//(WIDTH/3))
        ligne = int(position[1]//(HEIGHT/3))
-       
+   
        # Vérifier s'il y a une pièce
        piece_deplacee = jeu.occupant(colonne, ligne)
        if piece_deplacee != None: # pièce sélectionnée
@@ -73,7 +72,7 @@ Le déplacement via la souris fait intervenir 3 événements (instructions à pl
    ```
 
 2. `pygame.MOUSEMOTION`: déplacement de la pièce.
-
+   
    ```python
    elif e.type == pygame.MOUSEMOTION: # suivre le déplacement
        if piece_deplacee != None:
@@ -81,15 +80,15 @@ Le déplacement via la souris fait intervenir 3 événements (instructions à pl
    ```
 
 3. `pygame.MOUSEBUTTONUP`: dépose de la pièce.
-
+   
    ```python
    elif e.type == pygame.MOUSEBUTTONUP: # Fin
        if piece_deplacee != None:
            position = e.pos
            colonne = int(position[0]//(WIDTH/3))
            ligne = int(position[1]//(HEIGHT/3))
-           
-   		case_arrivee = (colonne, ligne)
+   
+           case_arrivee = (colonne, ligne)
            jeu.deplacer(case_dep, case_arrivee)
            piece_deplacee = None
    ```
@@ -97,7 +96,7 @@ Le déplacement via la souris fait intervenir 3 événements (instructions à pl
 Dans la partie *Dessin du contenu*, il faut:
 
 - Arrêter de dessiner la pièce dans sa case départ lors d'un déplacement (dans la double boucle de dessin du plateau):
-
+  
   ```python
   # Ne pas dessiner la pièce qui se déplace
   if piece_deplacee!=None and (j,i)==case_dep:
@@ -105,7 +104,7 @@ Dans la partie *Dessin du contenu*, il faut:
   ```
 
 - Dessiner la pièce qui se déplace à la bonne position:
-
+  
   ```python
   # Dessin de la pièce qui bouge
   if piece_deplacee == 1: # une croix
@@ -114,4 +113,20 @@ Dans la partie *Dessin du contenu*, il faut:
       screen.blit(cercle, position)
   ```
 
-  
+> Pour un meilleur ajustement de l'image déplacée vis à vis du curseur de la souris, il faut:
+>
+> - ajouter une variable `delta` qui mémorise où l'utilisateur a cliqué dans l'image la première fois (événement `MOUSEBUTTONDOWN`):
+>
+>   ```python
+>   elif e.type == pygame.MOUSEBUTTONDOWN: # Début
+>       ...
+>       delta = ( position[0]%int(WIDTH/3), position[1]%int(HEIGHT/3) )
+>       ...
+>   ```
+>
+> - utiliser cette variable pour dessiner la pièce déplacée:
+>
+>   ```python
+>   # à faire aussi pour le cercle
+>   screen.blit(croix, (position[0]-delta[0], position[1]-delta[1]) )
+>   ```
