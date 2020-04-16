@@ -113,7 +113,7 @@ Dans la partie *Dessin du contenu*, il faut:
       screen.blit(cercle, position)
   ```
 
-> Pour un meilleur ajustement de l'image déplacée vis à vis du curseur de la souris, il faut:
+> Pour ajuster correctement la position de l'image déplacée vis à vis du pointeur de la souris, il faut:
 >
 > - ajouter une variable `delta` qui mémorise où l'utilisateur a cliqué dans l'image la première fois (événement `MOUSEBUTTONDOWN`):
 >
